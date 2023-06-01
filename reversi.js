@@ -46,8 +46,8 @@ function imprimir(tablero) {
     }
 }
 
-async function colocarFicha(turno=false) {
-   
+async function colocarFicha(turno = false) {
+
 
     if (turno == false) {
         const coordenada = await leeLinea("Introduce la coordenada para colocar la ficha 'X' (ejemplo: A1): ");
@@ -60,19 +60,20 @@ async function colocarFicha(turno=false) {
 
             if (tablero[fila][columna] === "[ ]") {
                 tablero[fila][columna] = "[X]";
+                encerraste('X', fila, columna);
                 imprimir(tablero);
-                colocarFicha(true); 
-                
+                colocarFicha(true);
+
             } else {
                 console.log("La casilla ya está ocupada.");
             }
         } else {
             console.log("Coordenada inválida.");
-            colocarFicha(false); 
+            colocarFicha(false);
         }
 
     } else {
-        turno=false; 
+        turno = false;
         const coordenada = await leeLinea("Introduce la coordenada para colocar la ficha 'O' (ejemplo: A1): ");
         const letra = coordenada.charAt(0).toUpperCase();
         const numero = parseInt(coordenada.charAt(1));
@@ -83,18 +84,69 @@ async function colocarFicha(turno=false) {
 
             if (tablero[fila][columna] === "[ ]") {
                 tablero[fila][columna] = "[O]";
+                encerraste('O', fila, columna);
                 imprimir(tablero);
-                return true;
+                colocarFicha(false)
             } else {
                 console.log("La casilla ya está ocupada.");
+                console.log("Intentelo de nuevo");
+                colocarFicha(true);
             }
         } else {
             console.log("Coordenada inválida.");
-            colocarFicha(); // Pedir coordenada nuevamente
+            console.log("Intentelo de nuevo")
+            colocarFicha(true); // Pedir coordenada nuevamente
         }
 
     }
 }
 
+function encerraste(tipoFicha, fila_Ficha, columna_Ficha) {
+    if (tipoFicha == 'X') {
+        if (tablero[fila_Ficha][columna_Ficha + 1] == "[O]") {
+            for (let fila = fila_Ficha; fila < 8; fila++) {
+                for (let columna = columna_Ficha + 1; columna < 8; columna++) {
+                    if (tablero[fila][columna] == '[O]') {
+                        tablero[fila][columna] = '[X]'
+                    }
+                }
+            }
+            // este funciona a la izquierda no 
+        }
+        if (tablero[fila_Ficha][columna_Ficha - 1] == "[O]") {
+            for (let fila = fila_Ficha; fila < 8; fila++) {
+                for (let columna = columna_Ficha - 1; columna < 8; columna--) {
+                    if (tablero[fila][columna] == '[O]') {
+                        tablero[fila][columna] = '[X]'
+                    }
+                }
+            }
+        }
+    }
+    if (tipoFicha == 'O') {
+        if (tablero[fila_Ficha][columna_Ficha + 1] == "[X]") {
+            for (let fila = fila_Ficha; fila < 8; fila++) {
+                for (let columna = columna_Ficha + 1; columna < 8; columna++) {
+                    if (tablero[fila][columna] == '[X]') {
+                        tablero[fila][columna] = '[O]'
+                    }
+                }
+            }
+        }
+        if (tablero[fila_Ficha][columna_Ficha - 1] == "[X]") {
+            for (let fila = fila_Ficha; fila < 8; fila++) {
+                for (let columna = columna_Ficha - 1; columna < 8;columna--) {
+                    // while (tablero[fila][columna] !== '[X]') {
+                    //     columna--
+                        if (tablero[fila][columna] == '[X]') {
+                            tablero[fila][columna] = '[O]'
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+console.log(tablero)
 imprimir(tablero);
 colocarFicha(); // Pedron
